@@ -167,6 +167,23 @@ class RTCPeerConnectionObserver {
 
  protected:
   virtual ~RTCPeerConnectionObserver() {}
+
+ public:
+  // Called when ICE selects a new candidate pair, for example after an ICE
+  // restart or a network change. The candidate() strings are full SDP
+  // candidate lines and include the ufrag of the ICE generation they belong
+  // to. The event does not carry an m-line index, so sdp_mid() is the name of
+  // the transport the pair belongs to and sdp_mline_index() is -1.
+  // `reason` describes why the pair changed. `last_data_received_ms` is the
+  // time data was last received on the new pair and
+  // `estimated_disconnected_time_ms` is how long the connection was estimated
+  // to be disconnected before the switch, 0 if there was no previous pair.
+  // Optional, the default does nothing. It is declared after the destructor
+  // so that the existing vtable slots keep their positions.
+  virtual void OnIceSelectedCandidatePairChanged(
+      scoped_refptr<RTCIceCandidate> local,
+      scoped_refptr<RTCIceCandidate> remote, int64_t last_data_received_ms,
+      const string reason, int64_t estimated_disconnected_time_ms) {}
 };
 
 class RTCPeerConnection : public RefCountInterface {

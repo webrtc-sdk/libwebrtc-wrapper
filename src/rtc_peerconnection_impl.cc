@@ -331,6 +331,25 @@ void RTCPeerConnectionImpl::OnIceConnectionChange(
     observer_->OnIceConnectionState(ice_connection_state_map[new_state]);
 }
 
+void RTCPeerConnectionImpl::OnIceSelectedCandidatePairChanged(
+    const webrtc::CandidatePairChangeEvent& event) {
+  if (!observer_) return;
+
+  // The event has no m-line index. Use the transport name as the mid and -1
+  // as the index, as the native mobile SDKs in WebRTC do.
+  const auto& pair = event.selected_candidate_pair;
+  scoped_refptr<RTCIceCandidate> local = scoped_refptr<RTCIceCandidateImpl>(
+      new RefCountedObject<RTCIceCandidateImpl>(webrtc::CreateIceCandidate(
+          event.transport_name, -1, pair.local_candidate())));
+  scoped_refptr<RTCIceCandidate> remote = scoped_refptr<RTCIceCandidateImpl>(
+      new RefCountedObject<RTCIceCandidateImpl>(webrtc::CreateIceCandidate(
+          event.transport_name, -1, pair.remote_candidate())));
+
+  observer_->OnIceSelectedCandidatePairChanged(
+      local, remote, event.last_data_received_ms, event.reason,
+      event.estimated_disconnected_time_ms);
+}
+
 void RTCPeerConnectionImpl::OnSignalingChange(
     webrtc::PeerConnectionInterface::SignalingState new_state) {
   if (observer_) observer_->OnSignalingState(signaling_state_map[new_state]);

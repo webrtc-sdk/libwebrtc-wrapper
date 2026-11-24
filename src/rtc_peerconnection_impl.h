@@ -179,6 +179,9 @@ class RTCPeerConnectionImpl : public RTCPeerConnection,
   virtual void OnIceConnectionChange(
       webrtc::PeerConnectionInterface::IceConnectionState new_state) override;
 
+  virtual void OnIceSelectedCandidatePairChanged(
+      const webrtc::CandidatePairChangeEvent& event) override;
+
   virtual void OnSignalingChange(
       webrtc::PeerConnectionInterface::SignalingState new_state) override;
 
