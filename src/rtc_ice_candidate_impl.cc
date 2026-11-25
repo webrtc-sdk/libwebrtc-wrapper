@@ -37,6 +37,10 @@ int RTCIceCandidateImpl::sdp_mline_index() const {
   return candidate_->sdp_mline_index();
 }
 
+const string RTCIceCandidateImpl::username_fragment() const {
+  return candidate_->candidate().username();
+}
+
 bool RTCIceCandidateImpl::ToString(string& out) {
   std::string tmp;
   if (candidate_->ToString(&tmp)) {

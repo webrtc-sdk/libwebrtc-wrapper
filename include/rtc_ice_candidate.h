@@ -22,6 +22,13 @@ class RTCIceCandidate : public RefCountInterface {
 
  protected:
   virtual ~RTCIceCandidate() {}
+
+ public:
+  // The ICE username fragment (ufrag) of the ICE generation the candidate
+  // belongs to. It changes with every ICE restart. Empty when unknown.
+  // It is declared after the destructor so that the existing vtable slots
+  // keep their positions.
+  virtual const string username_fragment() const = 0;
 };
 
 }  // namespace libwebrtc
